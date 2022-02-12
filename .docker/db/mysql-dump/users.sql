@@ -1,0 +1,4 @@
+FLUSH PRIVILEGES;
+CREATE USER 'dashboard_tester'@'%' IDENTIFIED BY 'Akhy9T2xXugtXCzL';
+GRANT ALL PRIVILEGES ON * . * TO 'dashboard_tester'@'%';
+FLUSH PRIVILEGES;
