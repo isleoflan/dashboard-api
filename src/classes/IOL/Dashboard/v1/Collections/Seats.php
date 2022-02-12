@@ -44,12 +44,16 @@ class Seats extends Collection
 
     public function getList(?string $userId): array
     {
-        $ssoClient = new Client(APIResponse::APP_TOKEN);
-        $ssoClient->setAccessToken(null);
-        $user = new User($ssoClient);
-        $userData = $user->getUserInfo(null);
-        $userData = $userData['response']['data'];
-        $squadId = is_null($userData['squad']) ? null : $userData['squad']['id'];
+        if(!is_null(APIResponse::getRequestHeader('Authorization'))) {
+            $ssoClient = new Client(APIResponse::APP_TOKEN);
+            $ssoClient->setAccessToken(APIResponse::getAuthToken());
+            $user = new User($ssoClient);
+            $userData = $user->getUserInfo(null);
+            $userData = $userData['response']['data'];
+            $squadId = is_null($userData['squad']) ? null : $userData['squad']['id'];
+        } else {
+            $squadId = null;
+        }
 
         $squadReservation = Seat::squadHasReservation($squadId);
 
