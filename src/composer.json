@@ -11,16 +11,7 @@
   ],
   "require": {
     "isleoflan/iol-sso-library": "*",
-    "stripe/stripe-php": "^7.14",
-    "paypal/rest-api-sdk-php": "^1.14",
-    "mvjacobs/coinbase-commerce": "*",
-    "php-amqplib/php-amqplib": ">=3.0",
     "vlucas/phpdotenv": "^5.3",
-    "setasign/fpdf": "^1.8",
-    "endroid/qr-code": "^4.4.7",
-    "genkgo/camt": "^1.0",
-    "andrew-svirin/ebics-client-php": "^v2.0.1",
-    "mpdf/mpdf": "^v8.0.17",
     "ext-sockets": "*",
     "ext-curl": "*"
   }

@@ -14,7 +14,7 @@ use JetBrains\PhpStorm\NoReturn;
 
 class APIResponse
 {
-    public const APP_TOKEN = '253051de-50b6-445f-8486-f60425dc5651';
+    public const APP_TOKEN = '3f600c05-78cd-48ad-9355-0761850c9d21';
 
     /**
      * @var APIResponse|null $instance
