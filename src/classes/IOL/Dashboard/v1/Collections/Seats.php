@@ -47,7 +47,7 @@ class Seats extends Collection
         $ssoClient = new Client(APIResponse::APP_TOKEN);
         $ssoClient->setAccessToken(null);
         $user = new User($ssoClient);
-        $userData = $user->getUserInfo();
+        $userData = $user->getUserInfo(null);
         $userData = $userData['response']['data'];
         $squadId = is_null($userData['squad']) ? null : $userData['squad']['id'];
 
