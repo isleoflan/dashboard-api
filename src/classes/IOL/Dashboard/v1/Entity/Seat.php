@@ -52,19 +52,14 @@ class Seat
     }
 
     #[ArrayShape(['userDetails' => "array|mixed", 'status' => "string"])]
-    public function getAvailability(?string $userId, ?string $squadId, bool $squadReservation = false): array
+    public function getAvailability(?string $userId, ?string $squadId, bool $squadReservation, array $userData): array
     {
         $returnData = ['userDetails' => []];
         if(!is_null($userId) && $userId === $this->userId){
             $returnData['status'] = SeatStatus::ME;
         } else if (!is_null($this->userId)) {
+            $userData = $userData[$this->userId];
             if (!is_null($userId)) {
-                $ssoClient = new Client(APIResponse::APP_TOKEN);
-                $ssoClient->setAccessToken(APIResponse::getAuthToken());
-                $user = new User($ssoClient);
-                $userData = $user->getUserInfo($this->userId);
-                $userData = $userData['response']['data'];
-
                 if (!is_null($userData['squad']) && $userData['squad']['id'] === $squadId) {
                     $returnData['status'] = SeatStatus::SQUAD; // seat is taken by a user of the same squad
                 } else {

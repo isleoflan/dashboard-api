@@ -44,8 +44,8 @@ class Seats extends Collection
 
     public function getList(?string $userId): array
     {
+        $ssoClient = new Client(APIResponse::APP_TOKEN);
         if(!is_null($userId)) {
-            $ssoClient = new Client(APIResponse::APP_TOKEN);
             $ssoClient->setAccessToken(APIResponse::getAuthToken());
             $user = new User($ssoClient);
             $userData = $user->getUserInfo(null);
@@ -55,6 +55,11 @@ class Seats extends Collection
             $squadId = null;
         }
 
+        $user = new User($ssoClient);
+        $allUsers = $user->getList();
+        $allUsers = $allUsers['response']['data'];
+
+
         $squadReservation = Seat::squadHasReservation($squadId);
 
         $return = [];
@@ -62,7 +67,7 @@ class Seats extends Collection
         foreach($this->contents as $seat){
             /** @var Seat $seat */
 
-            $seatData = $seat->getAvailability($userId, $squadId, $squadReservation);
+            $seatData = $seat->getAvailability($userId, $squadId, $squadReservation, $allUsers);
 
             $return[] = [
                 'seat' => $seat->getSeat(),
