@@ -118,6 +118,11 @@ class Seat
     private function doReserve(string $userId): void
     {
         $database = Database::getInstance();
+        $database->where('user_id', $userId);
+        $database->update(self::DB_TABLE, [
+            'user_id' => null
+        ]);
+
         $database->where('seat', $this->seat);
         $database->update(self::DB_TABLE, [
             'user_id' => $userId
