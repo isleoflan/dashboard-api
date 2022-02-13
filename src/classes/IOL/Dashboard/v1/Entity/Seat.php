@@ -2,6 +2,7 @@
 
 namespace IOL\Dashboard\v1\Entity;
 
+use AndrewSvirin\Ebics\Models\Data;
 use IOL\Dashboard\v1\DataSource\Database;
 use IOL\Dashboard\v1\DataType\UUID;
 use IOL\Dashboard\v1\Enums\SeatStatus;
@@ -19,7 +20,6 @@ class Seat
     private string $seat;
     private ?string $userId;
     private ?string $squadId;
-    private int $eventId;
 
     /**
      * @throws NotFoundException
@@ -48,7 +48,6 @@ class Seat
         $this->seat = $values['seat'];
         $this->userId = $values['user_id'];
         $this->squadId = $values['squad_id'];
-        $this->eventId = $values['event_id'];
     }
 
     #[ArrayShape(['userDetails' => "array|mixed", 'status' => "string"])]
@@ -85,6 +84,47 @@ class Seat
         $data = $database->get(self::DB_TABLE);
 
         return isset($data[0]['squad_id']);
+    }
+
+    public function reserve(string $userId): ?int
+    {
+        $ssoClient = new Client(APIResponse::APP_TOKEN);
+        $user = new User($ssoClient);
+        $userInfo = $user->getUserInfo($userId);
+        $squadId = is_null($userInfo['response']['data']['squad']) ? null : $userInfo['response']['data']['squad']['id'];
+
+        $squadReservation = self::squadHasReservation($squadId);
+
+        if($userId === $this->userId){
+            // do nothing
+            return null;
+        }
+
+        if (!is_null($this->userId)) {
+            // seat is already taken
+            return 701002;
+        }
+
+        if ($squadReservation) { // user is part of a squad, that has a reservation
+            if ($squadId === $this->squadId) { // this seat is part of the squads reservation
+                $this->doReserve($userId);
+            } else {
+                // the seat is not part of the squad's reservation, so it is not available to the user
+                return 701003;
+            }
+        } else {
+            $this->doReserve($userId);
+        }
+        return null;
+    }
+
+    private function doReserve(string $userId): void
+    {
+        $database = Database::getInstance();
+        $database->where('seat', $this->seat);
+        $database->update(self::DB_TABLE, [
+            'user_id' => $userId
+        ]);
     }
 
     /**

@@ -219,6 +219,21 @@
     "errorCode": 400
   },
 
+  "701001": {
+    "message": "The given seat does not exist",
+    "errorCode": 404
+  },
+
+  "701002": {
+    "message": "The given seat is already taken",
+    "errorCode": 403
+  },
+
+  "701003": {
+    "message": "Your squad has a squad reservation. You cannot reserve a seat outside this reservation",
+    "errorCode": 403
+  },
+
 
 
   "901001": {
