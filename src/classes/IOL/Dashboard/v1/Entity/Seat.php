@@ -29,9 +29,9 @@ class Seat
     {
         if (!is_null($id)) {
             if (!UUID::isValid($id)) {
-                throw new InvalidValueException('Invalid Order ID');
+                throw new InvalidValueException('Invalid Seat ID');
             }
-            $this->loadData(Database::getRow('id', $id, self::DB_TABLE));
+            $this->loadData(Database::getRow('seat', $id, self::DB_TABLE));
         }
     }
 
