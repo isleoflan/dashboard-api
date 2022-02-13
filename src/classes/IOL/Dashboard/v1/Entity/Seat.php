@@ -59,16 +59,12 @@ class Seat
             $returnData['status'] = SeatStatus::ME;
         } else if (!is_null($this->userId)) {
             $userData = $userData[$this->userId];
-            if (!is_null($userId)) {
-                if (!is_null($userData['squad']) && $userData['squad']['id'] === $squadId) {
-                    $returnData['status'] = SeatStatus::SQUAD; // seat is taken by a user of the same squad
-                } else {
-                    $returnData['status'] = SeatStatus::TAKEN;
-                }
-                $returnData['userDetails'] = $userData;
+            if (!is_null($userData['squad']) && $userData['squad']['id'] === $squadId) {
+                $returnData['status'] = SeatStatus::SQUAD; // seat is taken by a user of the same squad
             } else {
-                $returnData['status'] = SeatStatus::AVAILABLE;
+                $returnData['status'] = SeatStatus::TAKEN;
             }
+            $returnData['userDetails'] = $userData;
         } else if ($squadReservation) { // user is part of a squad, that has a reservation
             if ($squadId === $this->squadId) { // this seat is part of the squads reservation
                 $returnData['status'] = SeatStatus::AVAILABLE;
