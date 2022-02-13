@@ -28,9 +28,6 @@ class Seat
     public function __construct(?string $id = null)
     {
         if (!is_null($id)) {
-            if (!UUID::isValid($id)) {
-                throw new InvalidValueException('Invalid Seat ID');
-            }
             $this->loadData(Database::getRow('seat', $id, self::DB_TABLE));
         }
     }
