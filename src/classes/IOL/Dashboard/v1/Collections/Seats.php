@@ -61,9 +61,13 @@ class Seats extends Collection
 
         foreach($this->contents as $seat){
             /** @var Seat $seat */
+
+            $seatData = $seat->getAvailability($userId, $squadId, $squadReservation);
+
             $return[] = [
                 'seat' => $seat->getSeat(),
-                'availability' => $seat->getAvailability($userId, $squadId, $squadReservation)
+                'availability' => $seatData['status'],
+                'userData' => $seatData['userDetails']
             ];
         }
 
