@@ -56,15 +56,18 @@ class Seat
         if(!is_null($userId) && $userId === $this->userId){ return SeatStatus::ME; }
 
         if(!is_null($this->userId)) {
-            $ssoClient = new Client(APIResponse::APP_TOKEN);
-            $ssoClient->setAccessToken(APIResponse::getAuthToken());
-            $user = new User($ssoClient);
-            $userData = $user->getUserInfo($this->userId);
-            $userData = $userData['response']['data'];
+            if(!is_null($userId)) {
+                $ssoClient = new Client(APIResponse::APP_TOKEN);
+                $ssoClient->setAccessToken(APIResponse::getAuthToken());
+                $user = new User($ssoClient);
+                $userData = $user->getUserInfo($this->userId);
+                $userData = $userData['response']['data'];
 
-            if(!is_null($userData['squad']) && $userData['squad']['id'] === $squadId) {
-                return SeatStatus::SQUAD; // seat is taken by a user of the same squad
+                if (!is_null($userData['squad']) && $userData['squad']['id'] === $squadId) {
+                    return SeatStatus::SQUAD; // seat is taken by a user of the same squad
+                }
             }
+            return SeatStatus::TAKEN;
         }
 
         if($squadReservation){ // user is part of a squad, that has a reservation

@@ -44,7 +44,7 @@ class Seats extends Collection
 
     public function getList(?string $userId): array
     {
-        if(!is_null(APIResponse::getRequestHeader('Authorization'))) {
+        if(!is_null($userId)) {
             $ssoClient = new Client(APIResponse::APP_TOKEN);
             $ssoClient->setAccessToken(APIResponse::getAuthToken());
             $user = new User($ssoClient);
