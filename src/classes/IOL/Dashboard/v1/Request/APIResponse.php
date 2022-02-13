@@ -8,7 +8,6 @@ use IOL\Dashboard\v1\BitMasks\RequestMethod;
 use IOL\SSO\SDK\Client;
 use IOL\SSO\SDK\Exceptions\SSOException;
 use IOL\SSO\SDK\Service\Authentication;
-use IOL\Dashboard\v1\Request\Error;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\NoReturn;
 
@@ -149,45 +148,47 @@ class APIResponse
             $this->addError(100004)->render();
         }
 
-        if ($this->authRequired) {
-            return self::verifyAuth();
-        }
+        return self::verifyAuth($this->authRequired);
 
-        return null;
     }
-    public static function getAuthToken(): string
+    public static function getAuthToken(bool $authRequired = false): ?string
     {
         // check, if Authorization header is present
         $authToken = false;
-        $authHeader = APIResponse::getRequestHeader('Authorization');
-        if (!is_null($authHeader)) {
-            if (str_starts_with($authHeader, 'Bearer ')) {
-                $authToken = substr($authHeader, 7);
-            }
+        $authHeader = self::getRequestHeader('Authorization');
+        if (!is_null($authHeader) && str_starts_with($authHeader, 'Bearer ')) {
+            $authToken = substr($authHeader, 7);
         }
         if (!$authToken) {
             // no actual token has been transmitted. Abort execution and send request to the gulag
-            APIResponse::getInstance()->addError(100003)->render();
+            if ($authRequired) {
+                self::getInstance()->addError(100003)->render();
+            } else {
+                return null;
+            }
         }
 
         return $authToken;
     }
-    public static function verifyAuth(): string
+    public static function verifyAuth(bool $authRequired): ?string
     {
-        $authToken = self::getAuthToken();
+        $authToken = self::getAuthToken($authRequired);
 
-        $ssoClient = new Client(self::APP_TOKEN);
-        $ssoClient->setAccessToken($authToken);
-        $verification = new Authentication($ssoClient);
-        $response = APIResponse::getInstance();
-        try {
-            $response::$userId = $verification->verifyToken();
-        } catch (SSOException $e) {
-            $response->addData('errorMessage', $e->getMessage());
-            $response->addError(999101)->render(); // TODO
+        if(!is_null($authToken)) {
+            $ssoClient = new Client(self::APP_TOKEN);
+            $ssoClient->setAccessToken($authToken);
+            $verification = new Authentication($ssoClient);
+            $response = self::getInstance();
+            try {
+                $response::$userId = $verification->verifyToken();
+            } catch (SSOException $e) {
+                $response->addData('errorMessage', $e->getMessage());
+                $response->addError(999101)->render(); // TODO
+            }
+
+            return $response::$userId;
         }
-
-        return $response::$userId;
+        return null;
     }
 
     public function addError(int $errorCode): APIResponse
@@ -208,7 +209,7 @@ class APIResponse
         if ($this->responseSent) {
             die;
         }
-        $response = ['data' => null, 'v' => $this->getAPIVersion()];
+        $response = ['v' => $this->getAPIVersion()];
 
         $returnCode = $this->getResponseCode();
 
@@ -320,7 +321,7 @@ class APIResponse
         if (in_array(self::getRequestMethod(), [
             RequestMethod::GET,
             RequestMethod::DELETE,
-        ])) {
+        ], true)) {
             $requestBody = $_GET;
         } else {
             $requestBody = json_decode(file_get_contents('php://input'), true);
@@ -334,12 +335,12 @@ class APIResponse
 
     private function isJson(string $string): bool
     {
-        json_decode($string);
+        json_decode($string, true);
 
         return json_last_error() === JSON_ERROR_NONE;
     }
 
-    private function checkForOptionsMethod()
+    private function checkForOptionsMethod(): void
     {
         if (self::getRequestMethod() === RequestMethod::OPTIONS) {
             $methods = implode(',', array_values($this->getAllowedRequestMethods()->getValues()));
@@ -365,7 +366,7 @@ class APIResponse
         if (in_array(self::getRequestMethod(), [
             RequestMethod::GET,
             RequestMethod::DELETE,
-        ])) {
+        ], true)) {
             $requestBody = $_GET;
         } else {
             $requestBody = file_get_contents('php://input');
@@ -378,13 +379,14 @@ class APIResponse
         return $requestBody;
     }
 
-    private function parseElement(mixed $parseElement, array $requestBody)
+    private function parseElement(mixed $parseElement, array $requestBody): void
     {
         if ($parseElement['required'] && !isset($requestBody[$parseElement['name']])) {
             $this->addError($parseElement['errorCode']);
         } elseif (isset($requestBody[$parseElement['name']]) && !in_array(
                 gettype($requestBody[$parseElement['name']]),
-                $parseElement['types']
+                $parseElement['types'],
+                true
             )) {
             $this->addError($parseElement['errorCode']);
         }
