@@ -68,7 +68,11 @@ class Seat
                 $returnData['status'] = SeatStatus::BLOCKED; // the seat is not part of the squad's reservation, so it is not available to the user
             }
         } else {
-            $returnData['status'] = SeatStatus::AVAILABLE;
+            if (!is_null($this->squadId)) { // this seat is part of the squads reservation
+                $returnData['status'] = SeatStatus::BLOCKED;
+            } else {
+                $returnData['status'] = SeatStatus::AVAILABLE; // the seat is not part of the squad's reservation, so it is not available to the user
+            }
         }
         return $returnData;
     }
