@@ -66,10 +66,20 @@ class Seat
                 $returnData['status'] = SeatStatus::AVAILABLE;
             } else {
                 $returnData['status'] = SeatStatus::BLOCKED; // the seat is not part of the squad's reservation, so it is not available to the user
+                $returnData['userDetails'] = [
+                    'username' => 'Nicht in Squad-Reservation',
+                    'avatar' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAQAAABIkb+zAAACM0lEQVR42u2aMU7DQBBFXwgUSKYJJS2i4AK5AhI99OESOQF0RgGSU0SigIpjQDgAiUQDlSuKSEuBLIHXJnZsdnbNzLSe5L/12rNfHtDQ0Gg6OvQZMuWRVwyGVx6ZMqRPx3/xe1ywwBTkggv2/BXfY8xHofg0PxjT81H+Ce8rxaf5zolf4jeZlBaf5oRNX+Rvc1dZvsFwx7Yfq3+/lnyD4d6HuzBZW/7XRhKO0wJhL9xwzD4REfscc8NLwZWnkvJ3ect92w/oWtd2GeR2iDd25QDGOYJuiQqvj7jNqRjLdV27bV2uOC50uMxpbULd+Txn9Vefdjo5d+FcQv4Gc2vvR6UqI+tZmLPhHqBvreNZ6dozq7bvHmBorWK3dG3XuntD9wDTjITrStXXmeqpe4CnjISjStVHmeon9wDZFnZQqfrAamfOI9sDdipV71i9wHlk3yOu6xVAARRAARTALcAhMc8ktSx8mUx4JuawWfFbXLH8c+nfc8kVW83Jf3AqPs2HphBGIvINhlEze38pBrBs4lmIxeQbDHF9gJkowKw+QCIKkMg3LPH/UwAFUAAFUAAFUAAFEPjB1ENX9bheANgeurzH9QCgyEOX87geAIxqeVxxgN88dBmPKw4Q1/S44gCzmh5XHCCp6XEV4N9voeAf4uBfo8E3shYcJYI/zLXgOK2OTAEUQAEUQAEUQAHaAhD8h+7gRw2CH/YIftwm+IGnFoycBT/099PjBjl2qaGhoaHR1vgEj5EY4FVkwfcAAAAASUVORK5CYII=',
+                    'squad' => []
+                ];
             }
         } else {
             if (!is_null($this->squadId)) { // this seat is part of the squads reservation
                 $returnData['status'] = SeatStatus::BLOCKED;
+                $returnData['userDetails'] = [
+                    'username' => 'Reserviert',
+                    'avatar' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAQAAABIkb+zAAACM0lEQVR42u2aMU7DQBBFXwgUSKYJJS2i4AK5AhI99OESOQF0RgGSU0SigIpjQDgAiUQDlSuKSEuBLIHXJnZsdnbNzLSe5L/12rNfHtDQ0Gg6OvQZMuWRVwyGVx6ZMqRPx3/xe1ywwBTkggv2/BXfY8xHofg0PxjT81H+Ce8rxaf5zolf4jeZlBaf5oRNX+Rvc1dZvsFwx7Yfq3+/lnyD4d6HuzBZW/7XRhKO0wJhL9xwzD4REfscc8NLwZWnkvJ3ect92w/oWtd2GeR2iDd25QDGOYJuiQqvj7jNqRjLdV27bV2uOC50uMxpbULd+Txn9Vefdjo5d+FcQv4Gc2vvR6UqI+tZmLPhHqBvreNZ6dozq7bvHmBorWK3dG3XuntD9wDTjITrStXXmeqpe4CnjISjStVHmeon9wDZFnZQqfrAamfOI9sDdipV71i9wHlk3yOu6xVAARRAARTALcAhMc8ktSx8mUx4JuawWfFbXLH8c+nfc8kVW83Jf3AqPs2HphBGIvINhlEze38pBrBs4lmIxeQbDHF9gJkowKw+QCIKkMg3LPH/UwAFUAAFUAAFUAAFEPjB1ENX9bheANgeurzH9QCgyEOX87geAIxqeVxxgN88dBmPKw4Q1/S44gCzmh5XHCCp6XEV4N9voeAf4uBfo8E3shYcJYI/zLXgOK2OTAEUQAEUQAEUQAHaAhD8h+7gRw2CH/YIftwm+IGnFoycBT/099PjBjl2qaGhoaHR1vgEj5EY4FVkwfcAAAAASUVORK5CYII=',
+                    'squad' => []
+                ];
             } else {
                 $returnData['status'] = SeatStatus::AVAILABLE; // the seat is not part of the squad's reservation, so it is not available to the user
             }
