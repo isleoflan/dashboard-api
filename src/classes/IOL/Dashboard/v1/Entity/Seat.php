@@ -150,4 +150,13 @@ class Seat
     {
         return $this->seat;
     }
+
+    public static function userHasReservedSeat(string $userId): bool
+    {
+        $database = Database::getInstance();
+        $database->where('user_id', $userId);
+        $seatData = $database->get(self::DB_TABLE);
+
+        return isset($seatData[0]);
+    }
 }
