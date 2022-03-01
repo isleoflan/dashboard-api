@@ -14,6 +14,7 @@
     "vlucas/phpdotenv": "^5.3",
     "sentry/sentry": "^3.3.7",
     "ext-sockets": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "php-http/curl-client": "2.x-dev"
   }
 }

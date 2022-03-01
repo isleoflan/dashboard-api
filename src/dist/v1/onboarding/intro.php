@@ -15,12 +15,17 @@ $response->setAllowedRequestMethods(
 $response->needsAuth(true);
 $userId = $response->check();
 
-$response->addData('steps', Onboarding::getOnboarding($userId));
+$onboarding = Onboarding::getOnboarding($userId);
+$response->addData('steps', $onboarding);
 
-$ticket = new \IOL\Dashboard\v1\Entity\Ticket();
-$ticket->loadForUser($userId);
+if ($onboarding['ticketPayed']) {
+    $ticket = new \IOL\Dashboard\v1\Entity\Ticket();
+    $ticket->loadForUser($userId);
 
-$response->addData('ticket', [
-    'download' => Environment::get('APP_URL') . 'ticket/download?tid=' . $ticket->getTicketHash(),
-    'qr' => $ticket->getQRBase64()
-]);
+    $response->addData('ticket', [
+        'download' => Environment::get('APP_URL') . 'ticket/download?tid=' . $ticket->getTicketHash(),
+        'qr' => $ticket->getQRBase64()
+    ]);
+} else {
+    $response->addData('ticket', null);
+}
