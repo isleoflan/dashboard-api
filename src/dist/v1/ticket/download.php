@@ -10,7 +10,7 @@ $response = APIResponse::getInstance();
 $response->setAllowedRequestMethods(
     new RequestMethod(RequestMethod::GET)
 );
-$response->needsAuth(true);
+$response->needsAuth(false);
 $userId = $response->check();
 $input = $response->getRequestData([
     [
