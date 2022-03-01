@@ -23,7 +23,7 @@ $input = $response->getRequestData([
 
 $ticket = new \IOL\Dashboard\v1\Entity\Ticket();
 try {
-    $ticket->loadForHash($input['hash']);
+    $ticket->loadForHash($input['tid']);
 } catch (\IOL\Dashboard\v1\Exceptions\IOLException){
     $response->addError(702001)->render();
 }
