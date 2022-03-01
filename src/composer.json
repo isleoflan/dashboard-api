@@ -12,6 +12,7 @@
   "require": {
     "isleoflan/iol-sso-library": "*",
     "vlucas/phpdotenv": "^5.3",
+    "sentry/sentry": "^3.3.7",
     "ext-sockets": "*",
     "ext-curl": "*"
   }

@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+use IOL\Dashboard\v1\BitMasks\RequestMethod;
+use IOL\Dashboard\v1\DataSource\Environment;
+use IOL\Dashboard\v1\Entity\Onboarding;
+use IOL\Dashboard\v1\Request\APIResponse;
+
+$response = APIResponse::getInstance();
+
+$response->setAllowedRequestMethods(
+    new RequestMethod(RequestMethod::GET)
+);
+$response->needsAuth(true);
+$userId = $response->check();
+
+$response->addData('steps', Onboarding::getOnboarding($userId));
+
+$ticket = new \IOL\Dashboard\v1\Entity\Ticket();
+$ticket->loadForUser($userId);
+
+$response->addData('ticket', [
+    'download' => Environment::get('APP_URL') . 'ticket/download?tid=' . $ticket->getTicketHash(),
+    'qr' => $ticket->getQRBase64()
+]);

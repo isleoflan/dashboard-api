@@ -234,6 +234,15 @@
     "errorCode": 403
   },
 
+  "702001": {
+    "message": "This hash is invalid",
+    "errorCode": 404
+  },
+
+  "702002": {
+    "message": "This is not your ticket. You will be reported to the FBI.",
+    "errorCode": 403
+  },
 
 
   "901001": {
