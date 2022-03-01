@@ -15,6 +15,11 @@
     "sentry/sentry": "^3.3.7",
     "ext-sockets": "*",
     "ext-curl": "*",
-    "php-http/curl-client": "2.x-dev"
+    "php-http/curl-client": "2.x-dev",
+    "guzzlehttp/psr7": "^2.1.0"
+  }
+  ,
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
   }
 }
