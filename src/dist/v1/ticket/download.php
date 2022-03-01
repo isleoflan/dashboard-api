@@ -32,3 +32,4 @@ if ($ticket->userId !== $userId) {
     $response->addError(702002)->render();
 }
 
+$ticket->downloadTicket();

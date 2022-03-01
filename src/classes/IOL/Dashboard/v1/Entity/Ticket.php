@@ -46,17 +46,26 @@ class Ticket
         return md5($this->id . 'TX' . $this->userId);
     }
 
+    public function getTicketPath(): string
+    {
+        return Environment::get('GENERATED_CONTENT_PATH') . '/tickets/ticket-'.$this->id.'.pdf';
+    }
+
+    public function downloadTicket(): never
+    {
+        $fileContent = file_get_contents($this->getTicketPath());
+        header("Content-Type: application/pdf");
+        header("Content-Length: " . filesize($this->getTicketPath()));
+        echo $fileContent;
+
+        die;
+    }
+
     public function getQRBase64(): string
     {
         $qrPath = Environment::get('GENERATED_CONTENT_PATH') .'/qr/ticket-'.$this->id.'.png';
         $type = pathinfo($qrPath, PATHINFO_EXTENSION);
         $data = file_get_contents($qrPath);
         return 'data:image/' . $type . ';base64,' . base64_encode($data);
-    }
-
-    public function generatePDF()
-    {
-        $qrPath = Environment::get('GENERATED_CONTENT_PATH') .'/qr/ticket-'.$this->id.'.png';
-        $filename = Environment::get('GENERATED_CONTENT_PATH') . '/tickets/ticket-'.$this->id.'.pdf';
     }
 }

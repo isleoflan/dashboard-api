@@ -39,6 +39,8 @@ class APIResponse
      */
     private bool $authRequired = true;
 
+    private bool $sendResponse = true;
+
     /**
      * @var string $returnType
      *
@@ -356,7 +358,9 @@ class APIResponse
 
     private function sendResponse(array $response): void
     {
-        echo json_encode($response);
+        if ($this->sendResponse) {
+            echo json_encode($response);
+        }
         $this->responseSent = true;
     }
 
@@ -427,6 +431,14 @@ class APIResponse
     private function sendCORSHeader(): void
     {
         header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*')); // TODO: sane CORS
+    }
+
+    /**
+     * @param bool $sendResponse
+     */
+    public function setSendResponse(bool $sendResponse): void
+    {
+        $this->sendResponse = $sendResponse;
     }
 
 
