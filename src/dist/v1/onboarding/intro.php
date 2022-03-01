@@ -23,7 +23,7 @@ if ($onboarding['ticketPayed']) {
     $ticket->loadForUser($userId);
 
     $response->addData('ticket', [
-        'download' => Environment::get('APP_URL') . 'ticket/download?tid=' . $ticket->getTicketHash(),
+        'download' => Environment::get('APP_URL') . 'v1/ticket/download?tid=' . $ticket->getTicketHash(),
         'qr' => $ticket->getQRBase64()
     ]);
 } else {

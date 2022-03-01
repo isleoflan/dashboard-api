@@ -14,7 +14,7 @@ $response->needsAuth(true);
 $userId = $response->check();
 $input = $response->getRequestData([
     [
-        'name' => 'hash',
+        'name' => 'tid',
         'types' => ['string'],
         'required' => true,
         'errorCode' => 601101,
