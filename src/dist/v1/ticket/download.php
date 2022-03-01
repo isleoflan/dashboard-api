@@ -28,8 +28,4 @@ try {
     $response->addError(702001)->render();
 }
 
-if ($ticket->userId !== $userId) {
-    $response->addError(702002)->render();
-}
-
 $ticket->downloadTicket();
