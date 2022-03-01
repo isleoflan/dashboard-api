@@ -22,7 +22,7 @@
         if ($filePath && file_exists($filePath)) {
             include_once $filePath;
         } else {
-            die('Dependency not found. ('.$filePath.' / '.$className.')');
+            //die('Dependency not found. ('.$filePath.' / '.$className.')');
         }
     });
 
